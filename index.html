@@ -3,64 +3,906 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sky the Cat</title>
+  <title>Luna — The White Cat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f2;
+      --blush: #e8d5c4;
+      --dusty-rose: #c9a99a;
+      --muted-sage: #a8b5a0;
+      --deep-charcoal: #2c2825;
+      --soft-brown: #7a5c50;
+      --gold: #c8a96e;
+      --light-gold: #e8d9b8;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(#e6f7ff, #ffffff);
+      font-family: 'Jost', sans-serif;
+      background-color: var(--cream);
+      color: var(--deep-charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(232,217,184,0.4) 0%, transparent 65%),
+                  radial-gradient(ellipse at 10% 80%, rgba(201,169,154,0.2) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px 80px 100px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--dusty-rose);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.3s;
+    }
+
+    h1.cat-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(5rem, 9vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--deep-charcoal);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+
+    h1.cat-name em {
+      font-style: italic;
+      color: var(--dusty-rose);
+    }
+
+    .hero-tagline {
+      margin-top: 32px;
+      font-weight: 200;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--soft-brown);
+      max-width: 380px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.7s;
+    }
+
+    .hero-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      margin: 40px 0;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.9s;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.1s;
+    }
+
+    .stat-item { text-align: left; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--deep-charcoal);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dusty-rose);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* ─── CAT ILLUSTRATION ─── */
+    .hero-right {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 60px;
     }
 
-    .card {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      max-width: 500px;
+    .cat-portrait {
+      position: relative;
+      width: min(420px, 90%);
+      aspect-ratio: 1;
     }
 
-    h1 {
-      margin-top: 0;
-      font-size: 2.5em;
+    .portrait-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50% 46% 54% 48%;
+      background: linear-gradient(135deg, var(--light-gold) 0%, var(--blush) 50%, var(--warm-white) 100%);
+      opacity: 0;
+      animation: scaleIn 1s ease forwards 0.4s;
     }
 
-    p {
-      color: #555;
-      font-size: 1.1em;
+    .portrait-ring {
+      position: absolute;
+      inset: -16px;
+      border-radius: 50% 44% 56% 46%;
+      border: 1px solid rgba(200,169,110,0.3);
+      opacity: 0;
+      animation: scaleIn 1s ease forwards 0.6s;
     }
 
-    img {
-      width: 300px;
-      border-radius: 20px;
-      margin: 20px 0;
+    .cat-svg-wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 0.8s;
     }
 
-    .footer {
-      margin-top: 15px;
-      font-size: 0.9em;
-      color: #888;
+    /* ─── FLOATING ELEMENTS ─── */
+    .float-paw {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.25;
+      animation: floatPaw 6s ease-in-out infinite;
+    }
+    .float-paw:nth-child(1) { top: 15%; right: 12%; animation-delay: 0s; }
+    .float-paw:nth-child(2) { bottom: 20%; left: 8%; animation-delay: 2s; font-size: 0.8rem; }
+    .float-paw:nth-child(3) { top: 55%; right: 5%; animation-delay: 4s; font-size: 0.9rem; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 80px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--deep-charcoal);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: var(--soft-brown);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── ORIGIN STORY ─── */
+    .story-section {
+      padding: 140px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-section::before {
+      content: 'LUNA';
+      position: absolute;
+      top: 60px;
+      right: -20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18vw;
+      font-weight: 300;
+      color: var(--blush);
+      opacity: 0.3;
+      line-height: 1;
+      pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      height: 1px;
+      width: 60px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 80px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .story-visual {
+      position: sticky;
+      top: 120px;
+    }
+
+    .story-card {
+      background: var(--warm-white);
+      border: 1px solid rgba(200,169,110,0.2);
+      padding: 48px;
+      border-radius: 2px;
+      box-shadow: 0 20px 60px rgba(44,40,37,0.06);
+      position: relative;
+    }
+
+    .story-card::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 40px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      color: var(--gold);
+      opacity: 0.4;
+      line-height: 1;
+    }
+
+    .story-card-date {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dusty-rose);
+      margin-bottom: 24px;
+    }
+
+    .story-card p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.9;
+      color: var(--soft-brown);
+    }
+
+    .story-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--deep-charcoal);
+      margin-bottom: 40px;
+    }
+
+    .story-text h2 em {
+      font-style: italic;
+      color: var(--dusty-rose);
+    }
+
+    .story-text p {
+      font-weight: 300;
+      font-size: 1rem;
+      line-height: 1.9;
+      color: var(--soft-brown);
+      margin-bottom: 24px;
+    }
+
+    /* ─── DAILY LIFE ─── */
+    .daily-section {
+      background: var(--deep-charcoal);
+      padding: 140px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daily-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(200,169,110,0.08) 0%, transparent 55%),
+                  radial-gradient(ellipse at 20% 80%, rgba(201,169,154,0.05) 0%, transparent 50%);
+    }
+
+    .daily-section .section-label { color: var(--gold); }
+    .daily-section .section-label::after { background: var(--gold); }
+
+    .daily-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 80px;
+      line-height: 1.1;
+    }
+
+    .daily-title em { font-style: italic; color: var(--gold); }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .schedule-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 32px;
+      transition: background 0.4s, transform 0.4s;
+      cursor: default;
+    }
+
+    .schedule-item:hover {
+      background: rgba(200,169,110,0.08);
+      transform: translateY(-4px);
+    }
+
+    .schedule-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .schedule-icon {
+      font-size: 2.2rem;
+      display: block;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .schedule-activity {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--cream);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .schedule-desc {
+      font-size: 0.8rem;
+      font-weight: 200;
+      color: rgba(250,247,242,0.45);
+      line-height: 1.7;
+    }
+
+    /* ─── GALLERY STRIP ─── */
+    .gallery-strip {
+      padding: 120px 100px;
+      background: var(--warm-white);
+    }
+
+    .gallery-strip .section-label { color: var(--gold); }
+    .gallery-strip .section-label::after { background: var(--gold); }
+
+    .gallery-moods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .mood-card {
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .mood-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7rem;
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .mood-card:hover .mood-bg { transform: scale(1.06); }
+
+    .mood-card:nth-child(1) .mood-bg { background: linear-gradient(160deg, #e8e0d8 0%, #d4c8bb 100%); }
+    .mood-card:nth-child(2) .mood-bg { background: linear-gradient(160deg, #d8e0d8 0%, #bfc9bd 100%); }
+    .mood-card:nth-child(3) .mood-bg { background: linear-gradient(160deg, #e0d8e0 0%, #c9b9c6 100%); }
+
+    .mood-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 24px;
+      background: linear-gradient(transparent, rgba(44,40,37,0.5));
+    }
+
+    .mood-label span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: white;
+      display: block;
+    }
+
+    .mood-label small {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--deep-charcoal);
+      padding: 60px 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--cream);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-note {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.3);
+    }
+
+    footer .paw-row {
+      font-size: 1rem;
+      opacity: 0.4;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes floatPaw {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(8deg); }
+    }
+
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(-8deg) scaleX(1); }
+      50% { transform: rotate(8deg) scaleX(1.02); }
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.012); }
+    }
+
+    .cat-body-group { animation: breathe 3.5s ease-in-out infinite; }
+    .cat-eye-left, .cat-eye-right { animation: blink 4.5s ease-in-out infinite; }
+    .cat-tail { transform-origin: 10px 10px; animation: tailWag 2.8s ease-in-out infinite; }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 120px 40px 60px; }
+      .hero-right { padding: 40px; }
+      .story-section, .daily-section, .gallery-strip { padding: 80px 40px; }
+      .story-grid { grid-template-columns: 1fr; }
+      .story-visual { position: static; }
+      .schedule-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-moods { grid-template-columns: 1fr; }
+      nav { padding: 24px 40px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; padding: 48px 40px; }
+      .story-section::before { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Meet Sky ☁️🐱</h1>
-    <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131" alt="Cute white cat" />
-    <p>
-      This is Sky, the cutest white cat! Sky loves naps in sunny spots,
-      chasing tiny shadows, and watching the world from the window.
-    </p>
 
-    <p>
-      Favorite activities: sleeping, exploring, and being adorable.
-    </p>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Luna ✦</a>
+    <ul class="nav-links">
+      <li><a href="#story">Her Story</a></li>
+      <li><a href="#daily">Daily Life</a></li>
+      <li><a href="#moods">Moods</a></li>
+    </ul>
+  </nav>
 
-    <div class="footer">Made with love for Sky</div>
-  </div>
+  <!-- HERO -->
+  <section class="hero">
+    <span class="float-paw">🐾</span>
+    <span class="float-paw">🐾</span>
+    <span class="float-paw">🐾</span>
+
+    <div class="hero-left">
+      <p class="eyebrow">Meet the household royalty</p>
+      <h1 class="cat-name">Lu<em>na</em></h1>
+      <p class="hero-tagline">
+        A snow-white cat with silver-tipped ears and eyes the color of a winter sea.
+        She arrived on a rainy October evening and never once considered leaving.
+      </p>
+      <div class="hero-divider"></div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Years Old</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">18+</span>
+          <span class="stat-label">Naps per Day</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Purrs Given</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="cat-portrait">
+        <div class="portrait-bg"></div>
+        <div class="portrait-ring"></div>
+        <div class="cat-svg-wrap">
+          <!-- Elegant white cat SVG illustration -->
+          <svg viewBox="0 0 300 340" width="320" height="360" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bodyGrad" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="70%" stop-color="#f5f0eb"/>
+                <stop offset="100%" stop-color="#e8ddd4"/>
+              </radialGradient>
+              <radialGradient id="faceGrad" cx="50%" cy="45%" r="50%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#f0e8e0"/>
+              </radialGradient>
+              <radialGradient id="eyeGrad" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#b0d4e8"/>
+                <stop offset="50%" stop-color="#7aacce"/>
+                <stop offset="100%" stop-color="#4a8aaa"/>
+              </radialGradient>
+              <radialGradient id="noseGrad" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#f4b8c0"/>
+                <stop offset="100%" stop-color="#d48a9a"/>
+              </radialGradient>
+              <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
+                <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#a08070" flood-opacity="0.15"/>
+              </filter>
+              <filter id="earShadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#c0a090" flood-opacity="0.2"/>
+              </filter>
+            </defs>
+
+            <!-- Tail -->
+            <g class="cat-tail">
+              <path d="M 195 265 Q 240 250 255 210 Q 268 170 250 155 Q 235 148 225 165 Q 215 182 220 220 Q 222 245 205 268 Z"
+                    fill="url(#bodyGrad)" stroke="#e0d0c0" stroke-width="0.5"/>
+              <!-- tail tip silver -->
+              <ellipse cx="247" cy="157" rx="10" ry="7" fill="#d8e8f0" transform="rotate(-20, 247, 157)"/>
+            </g>
+
+            <!-- BODY group -->
+            <g class="cat-body-group" filter="url(#softShadow)">
+
+              <!-- Main body -->
+              <ellipse cx="150" cy="240" rx="75" ry="70" fill="url(#bodyGrad)" />
+
+              <!-- Chest fluff -->
+              <ellipse cx="150" cy="215" rx="42" ry="32" fill="white" opacity="0.9"/>
+
+              <!-- Ears -->
+              <g filter="url(#earShadow)">
+                <!-- Left ear outer -->
+                <polygon points="75,115 55,60 115,90" fill="url(#bodyGrad)" stroke="#e0d0c4" stroke-width="0.5"/>
+                <!-- Left ear inner -->
+                <polygon points="80,110 65,72 108,93" fill="#f4c8c4" opacity="0.6"/>
+                <!-- Right ear outer -->
+                <polygon points="225,115 245,60 185,90" fill="url(#bodyGrad)" stroke="#e0d0c4" stroke-width="0.5"/>
+                <!-- Right ear inner -->
+                <polygon points="220,110 235,72 192,93" fill="#f4c8c4" opacity="0.6"/>
+              </g>
+
+              <!-- Head -->
+              <ellipse cx="150" cy="145" rx="72" ry="65" fill="url(#faceGrad)"/>
+
+              <!-- Forehead swirl marking -->
+              <path d="M 140 105 Q 150 95 160 105" stroke="#e8d8cc" stroke-width="1.5" fill="none" opacity="0.6"/>
+              <path d="M 143 112 Q 150 102 157 112" stroke="#e8d8cc" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+              <!-- Eyes - LEFT -->
+              <g class="cat-eye-left" style="transform-origin: 120px 145px;">
+                <ellipse cx="120" cy="145" rx="18" ry="14" fill="url(#eyeGrad)"/>
+                <!-- pupil -->
+                <ellipse cx="120" cy="145" rx="7" ry="11" fill="#1a2a30" opacity="0.9"/>
+                <!-- highlight -->
+                <circle cx="114" cy="139" r="4" fill="white" opacity="0.8"/>
+                <circle cx="125" cy="150" r="2" fill="white" opacity="0.4"/>
+                <!-- eye outline -->
+                <ellipse cx="120" cy="145" rx="18" ry="14" fill="none" stroke="#c0a898" stroke-width="0.8"/>
+              </g>
+
+              <!-- Eyes - RIGHT -->
+              <g class="cat-eye-right" style="transform-origin: 180px 145px;">
+                <ellipse cx="180" cy="145" rx="18" ry="14" fill="url(#eyeGrad)"/>
+                <ellipse cx="180" cy="145" rx="7" ry="11" fill="#1a2a30" opacity="0.9"/>
+                <circle cx="174" cy="139" r="4" fill="white" opacity="0.8"/>
+                <circle cx="185" cy="150" r="2" fill="white" opacity="0.4"/>
+                <ellipse cx="180" cy="145" rx="18" ry="14" fill="none" stroke="#c0a898" stroke-width="0.8"/>
+              </g>
+
+              <!-- Nose -->
+              <path d="M 145 166 Q 150 161 155 166 Q 150 172 145 166 Z" fill="url(#noseGrad)"/>
+
+              <!-- Mouth -->
+              <path d="M 150 171 Q 140 179 134 176" stroke="#c0908a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M 150 171 Q 160 179 166 176" stroke="#c0908a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+              <!-- Whiskers LEFT -->
+              <line x1="128" y1="168" x2="72" y2="160" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+              <line x1="126" y1="172" x2="68" y2="172" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+              <line x1="128" y1="176" x2="72" y2="185" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+
+              <!-- Whiskers RIGHT -->
+              <line x1="172" y1="168" x2="228" y2="160" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+              <line x1="174" y1="172" x2="232" y2="172" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+              <line x1="172" y1="176" x2="228" y2="185" stroke="#d0c0b8" stroke-width="1" opacity="0.7"/>
+
+              <!-- Front paws -->
+              <ellipse cx="120" cy="302" rx="28" ry="18" fill="url(#bodyGrad)"/>
+              <ellipse cx="180" cy="302" rx="28" ry="18" fill="url(#bodyGrad)"/>
+              <!-- toe lines -->
+              <path d="M 108 305 Q 112 310 116 305" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+              <path d="M 116 307 Q 120 312 124 307" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+              <path d="M 124 305 Q 128 310 132 305" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+              <path d="M 168 305 Q 172 310 176 305" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+              <path d="M 176 307 Q 180 312 184 307" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+              <path d="M 184 305 Q 188 310 192 305" stroke="#d0c0b8" stroke-width="1" fill="none"/>
+
+              <!-- Collar -->
+              <path d="M 95 195 Q 150 205 205 195" stroke="#c8a96e" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <!-- Bell -->
+              <circle cx="150" cy="204" r="7" fill="#c8a96e"/>
+              <circle cx="150" cy="204" r="5" fill="#e8c878"/>
+              <line x1="150" y1="207" x2="150" y2="211" stroke="#a07830" stroke-width="1.5"/>
+
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORIGIN STORY -->
+  <section class="story-section" id="story">
+    <div class="section-label">The Origin Story</div>
+    <div class="story-grid">
+      <div class="story-visual reveal">
+        <div class="story-card">
+          <p class="story-card-date">October 14th — A rainy Tuesday</p>
+          <p>
+            She appeared at the door like a small ghost — white as fresh snow, trembling slightly,
+            and looking at us as though she had always known we would open it.
+          </p>
+        </div>
+      </div>
+      <div class="story-text reveal">
+        <h2>The Night <em>She Chose Us</em></h2>
+        <p>
+          It was a cold October evening when we first heard the tiny, insistent sound at the front door.
+          Not a desperate cry — more like a polite, firm announcement. When we opened it,
+          there she was: a perfectly white cat, no larger than a loaf of bread, sitting
+          square in the center of the welcome mat as though she had always owned it.
+        </p>
+        <p>
+          She had no collar. No chip. Just enormous blue-grey eyes that looked straight through us
+          and a small golden bell tied around her neck with a fraying red ribbon —
+          as if someone, somewhere, had already named her something beautiful and then
+          let her go off to find her own home.
+        </p>
+        <p>
+          We put out a bowl of water. She drank, walked past us into the living room,
+          circled the warmest spot on the rug, and simply sat down. Not with the hesitance
+          of a stray — but with the casual authority of someone who had finally arrived
+          somewhere they had already planned to be.
+        </p>
+        <p>
+          We tried, briefly, to find her previous family. We posted. We asked around.
+          Nobody came forward. Which is how we came to understand what Luna had understood
+          all along: <em>she hadn't been abandoned — she had simply been searching.</em>
+          And now she was done.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAILY LIFE -->
+  <section class="daily-section" id="daily">
+    <div class="section-label" style="color:var(--gold)">A Day in the Life</div>
+    <h2 class="daily-title">Luna's <em>Daily Schedule</em></h2>
+    <div class="schedule-grid">
+      <div class="schedule-item reveal">
+        <span class="schedule-time">06:00 — 07:30</span>
+        <span class="schedule-icon">🌅</span>
+        <span class="schedule-activity">The Morning Audit</span>
+        <p class="schedule-desc">Luna wakes before sunrise and conducts a thorough inspection of every window — checking that the neighbourhood is still in order and no birds have become too comfortable on her sill.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">07:30 — 08:00</span>
+        <span class="schedule-icon">🍽️</span>
+        <span class="schedule-activity">Breakfast Supervision</span>
+        <p class="schedule-desc">She sits beside her food bowl precisely four minutes before breakfast is served, projecting focused telepathic disappointment until someone takes the hint.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">08:00 — 12:00</span>
+        <span class="schedule-icon">☀️</span>
+        <span class="schedule-activity">The Long Nap (Phase I)</span>
+        <p class="schedule-desc">Curled on the windowsill in the first patch of morning sunlight. Position adjusted every 22 minutes as the light moves. She treats this with great seriousness.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">12:00 — 13:00</span>
+        <span class="schedule-icon">🎭</span>
+        <span class="schedule-activity">The Zoomies</span>
+        <p class="schedule-desc">An explosive, apparently unprovoked sprint through the entire house. Origin and destination: unknown. Duration: exactly as long as it takes to knock something off a shelf.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">13:00 — 16:00</span>
+        <span class="schedule-icon">📚</span>
+        <span class="schedule-activity">The Long Nap (Phase II)</span>
+        <p class="schedule-desc">This time: on someone's laptop, an open book, or any piece of paper that looks important. Her gravity at this hour is extraordinary and impossible to disturb.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">16:00 — 18:00</span>
+        <span class="schedule-icon">🐦</span>
+        <span class="schedule-activity">Bird TV</span>
+        <p class="schedule-desc">Stationed at the back window, chattering softly at pigeons in a language only she understands. Occasionally turns to look at us as if requesting a second opinion.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">18:00 — 21:00</span>
+        <span class="schedule-icon">🤝</span>
+        <span class="schedule-activity">Social Hour</span>
+        <p class="schedule-desc">Luna becomes briefly, magnanimously affectionate — draping herself over knees, headbutting elbows, and purring at a frequency that seems to vibrate the whole sofa.</p>
+      </div>
+      <div class="schedule-item reveal">
+        <span class="schedule-time">21:00 — 06:00</span>
+        <span class="schedule-icon">🌙</span>
+        <span class="schedule-activity">Night Watch</span>
+        <p class="schedule-desc">She patrols the dark house at 3am, occasionally knocking one (1) item from the kitchen counter to confirm the laws of physics remain in effect. Then sleeps at the foot of the bed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOODS / GALLERY -->
+  <section class="gallery-strip" id="moods">
+    <div class="section-label">Her Many Moods</div>
+    <div class="gallery-moods">
+      <div class="mood-card reveal">
+        <div class="mood-bg">😌</div>
+        <div class="mood-label">
+          <span>The Philosopher</span>
+          <small>Staring at nothing for 45 minutes</small>
+        </div>
+      </div>
+      <div class="mood-card reveal">
+        <div class="mood-bg">😤</div>
+        <div class="mood-label">
+          <span>The Offended</span>
+          <small>You moved while she was comfortable</small>
+        </div>
+      </div>
+      <div class="mood-card reveal">
+        <div class="mood-bg">🥰</div>
+        <div class="mood-label">
+          <span>The Beloved</span>
+          <small>Head-bumps freely given, 6–8pm only</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-name">Luna ✦ The White Cat</div>
+    <div class="paw-row">🐾 🐾 🐾</div>
+    <div class="footer-note">Est. October 2021 · Still owns the armchair</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
